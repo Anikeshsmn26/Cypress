@@ -16,7 +16,11 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    bat 'npm install'
+                      dir("${env.WORKSPACE}") {
+                        
+                         bat 'npm install'
+                    }
+                  
                 }
             }
         }
