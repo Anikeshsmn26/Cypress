@@ -15,20 +15,22 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
+                // Install dependencies using npm
                 script {
-                      dir("${env.WORKSPACE}") {
-                        
-                         bat 'npm install'
+                    dir("${env.WORKSPACE}") {
+                        bat 'npm install'
                     }
-                  
                 }
             }
         }
 
         stage('Run Cypress Tests') {
             steps {
+                // Run Cypress tests
                 script {
-                    bat 'npx cypress run'
+                    dir("${env.WORKSPACE}") {
+                        bat 'npx cypress run'
+                    }
                 }
             }
         }
@@ -36,8 +38,12 @@ pipeline {
 
     post {
         always {
-            junit 'cypress/results/*.xml'
-            archiveArtifacts artifacts: 'cypress/screenshots/**/*, cypress/videos/**/*', allowEmptyArchive: true
+            node {
+                // Archive the test results
+                junit 'cypress/results/*.xml'
+                // Archive screenshots and videos
+                archiveArtifacts artifacts: 'cypress/screenshots/**/*, cypress/videos/**/*', allowEmptyArchive: true
+            }
         }
     }
 }
